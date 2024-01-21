@@ -10,15 +10,22 @@ http {
     server_name _;
 
     location / {
-        auth_basic	"Restricted";
-        auth_basic_user_file	/etc/nginx/.htpasswd;
+        # auth_basic	"Restricted";
+        # auth_basic_user_file	/etc/nginx/.htpasswd;
         
         proxy_set_header X-Real-IP $remote_addr;
         proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
         proxy_set_header Host $http_host;
-        proxy_set_header X-Nginx-Proxy true;
+        proxy_set_header X-Nginx-Proxy true;        
         proxy_http_version 1.1;
+        proxy_redirect off;
+        proxy_set_header Upgrade $http_upgrade;
+        proxy_set_header Connection "Upgrade";
+        proxy_set_header Sec-WebSocket-Key $http_sec_websocket_key;
+        proxy_set_header Sec-WebSocket-Version $http_sec_websocket_version;
+        proxy_set_header Sec-WebSocket-Extensions "permessage-deflate; client_max_window_bits";
         proxy_pass ${PROXY_PASS};
+
     }
   }
 }
